@@ -1,3 +1,12 @@
+//show loading spinner until page loads
+$(window).load(function(){
+    $('.spinner').fadeOut('slow');
+});
+
+//remove product on click
+$(document).on('click', '.remove-product', function(){
+    $(this).parent().fadeOut(500);
+});
 
 function domobj(){
   var self        =this;
@@ -25,9 +34,9 @@ function domobj(){
       thishtml += self.products[i].htmlview;
       if ((i % 3 == 2) || i == (self.products.length-1) ){thishtml += "</div>";console.log("FINISH")}
     }
-    $("#content").append(thishtml)
+    $("#content").append(thishtml);
   }
-  
+
 }
 
 function productobj(product, i){
@@ -39,16 +48,16 @@ function productobj(product, i){
   self.htmlview     = ""
   self.index        = i
   self.custom_class = "col"+ ((i % 3) +1)
+    self.description = product.description
   
   self.updatehtml= function(){
     $.get('product-template.html', function(template){
-      self.htmlview = template.replace('{image}', self.photo).replace('{title}', self.title).replace('{tagline}', self.tagline).replace('{url}', self.url).replace('{custom_class}', self.custom_class);
+      self.htmlview = template.replace('{image}', self.photo).replace('{title}', self.title).replace('{tagline}', self.tagline).replace('{url}', self.url).replace('{custom_class}', self.custom_class).replace('{description}', self.description);
     });
   }
 }
 
-
 var page=new domobj();
 page.getproducts('data.json');
 setTimeout("console.log('building html');page.updateproducthtml();",20);
-setTimeout("page.updatedom()",50)
+setTimeout("page.updatedom()",50);

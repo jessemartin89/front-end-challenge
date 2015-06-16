@@ -1,13 +1,74 @@
-body{font-family: "Arial"}
-a{text-decoration: none;}
+body{font-family: "Arial"; text-align:center;}
+a{text-decoration: none; color:#0096ff;}
 
-.product-container{width:300px; border:1px solid #aaa; margin:10px; display:inline-block;}
+.spinner{
+    position: fixed;
+    left: 0px;
+    top: 0px;
+    width: 100%;
+    height: 100%;
+    z-index: 9999;
+    background: url(images/loading.GIF) center no-repeat #fff;
+}
+
+/*main page headings */
+h1.title{font-size:20px; line-height:36px;}
+h2.tagline{font-size:16px; line-height:18px; font-weight:normal;}
+
+/*content styles*/
+#content{width:946px; margin:0 auto;}
+
+.product-container{width:300px; border:1px solid #aaa; margin:10px; display:inline-block; position:relative;}
 .product-container img{width:100%; height:auto;}
+.product-container .overlay{
+    background-color:rgba(0,0,0,.7);
+    position:absolute;
+    width:100%;
+    height: 100%;
+    display:none;
+    top:0;
+    left:0;
+    color:#fff;
+    padding:6% 4% 4%;
+    font-size:14px;
+    line-height:18px;
+    box-sizing:border-box;
+    z-index:5;
+}
+
+
 .row{width:946px;}
 
-.col1{float:left;}
-.col2{margin:10px auto;}
-.col3{float:right;}
+/*floated all columns left with margin so that when removing a product the grid fills the empty space */
+.col1, .col2, .col3{float:left; margin:10px 10px 10px 0;}
 
-.title{font-size:20px;}
+/*product styles*/
+.product-container:hover .overlay{display:block;}
+.product-container .overlay p{margin:0; font-size:13px;}
 .description{padding:10px;}
+.description .title, .description .tagline{line-height:16px;}
+.remove-product{
+    position:absolute;
+    top:5px;
+    right: 5px;
+    color: rgba(214,214,214,.8);
+    z-index:10;
+}
+.remove-product:hover{cursor: pointer; color: rgba(214,214,214,.5);}
+
+/*Mobile*/
+/*landscape - anything under 625px should only show one product per row*/
+@media (max-width: 625px){
+    #content{width:100%;}
+    .product-container{box-sizing:border-box; margin:0 0 20px 0;}
+    .row{width:300px; margin:0 auto;}
+    .col1, .col3{float:none;}
+    h1.title, h2.tagline{text-align:center;}
+    h2.tagline{margin-bottom:10px;}
+}
+
+/*medium breakpoint, used 625px to match the widths of 2 columns of products*/
+@media(min-width:626px) and (max-width: 900px){
+    #content{width:100%;}
+    .row{width:625px; margin:0 auto;}
+}
