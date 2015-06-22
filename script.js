@@ -6,7 +6,32 @@ $(window).load(function(){
 //remove product on click
 $(document).on('click', '.remove-product', function(){
     $(this).parent().fadeOut(500);
+    //get id from product removed
+    var product_id = $(this).parent().attr('id');
+    //console.log(product_id);
+    //remove product from json file
+    removeProduct(product_id);
+
 });
+
+function removeProduct(id) {
+    var productID = id.toString();
+    $.getJSON( "data.json", function(data){
+        $.ajax({
+                    url: 'save_json.php',
+                    type:"post",
+                    dataType: 'json',
+                    async: 'false',
+                    data: {id: productID},
+                    success: function(){
+                        console.log("AJAX request was successful");
+                    },
+                    error:function(){
+                        console.log("AJAX request was a failure");
+                    }
+                });
+    });
+}
 
 function domobj(){
   var self        =this;
@@ -22,12 +47,16 @@ function domobj(){
     
   self.updateproducthtml = function(){
     for( i=0; i< self.products.length ; i++){
-      self.products[i].updatehtml();
+        //check if the product has been flagged as removed
+        //console.log(self.products[i]);
+        if(self.products[i].removed != 1){
+            self.products[i].updatehtml();
+        }
     }
   }
   
   self.updatedom = function(){
-    var i=0
+    var i=0;
     thishtml='';
     for( i=0; i< self.products.length ; i++){
       if (i % 3 == 0 ){  thishtml += "<div class='row'>"; console.log("START") }
@@ -41,18 +70,20 @@ function domobj(){
 
 function productobj(product, i){
   var self          = this;
-  self.photo        = product.photos.medium_half
-  self.title        = product.name
-  self.tagline      = product.tagline
-  self.url          = product.url
-  self.htmlview     = ""
-  self.index        = i
-  self.custom_class = "col"+ ((i % 3) +1)
-    self.description = product.description
+  self.photo        = product.photos.medium_half;
+  self.title        = product.name;
+  self.tagline      = product.tagline;
+  self.url          = product.url;
+  self.htmlview     = "";
+  self.index        = i;
+  self.custom_class = "col"+ ((i % 3) +1);
+    self.description = product.description;
+    self.custom_id = product.id;
+    self.removed = product.removed;
   
   self.updatehtml= function(){
     $.get('product-template.html', function(template){
-      self.htmlview = template.replace('{image}', self.photo).replace('{title}', self.title).replace('{tagline}', self.tagline).replace('{url}', self.url).replace('{custom_class}', self.custom_class).replace('{description}', self.description);
+      self.htmlview = template.replace('{image}', self.photo).replace('{title}', self.title).replace('{tagline}', self.tagline).replace('{url}', self.url).replace('{custom_class}', self.custom_class).replace('{description}', self.description).replace('{custom_id}', self.custom_id);
     });
   }
 }
